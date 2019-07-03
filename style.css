@@ -1,0 +1,129 @@
+body {
+    background: #f5f5f5;
+    color: #202020;
+}
+.card {
+
+    background: #FAFAFA;
+
+}
+
+/*=============================
+  Card
+=============================*/
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  
+  @media (max-width: 675px) {
+    .cards > .card {
+      flex: auto;
+    }
+  }
+  
+  .card {
+    flex-direction: column;
+    overflow: hidden;
+    flex: 0 1 calc(50% - 0.5rem);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+  }
+
+  
+  .card-header {
+    font-weight: 600;
+    margin: 0;
+    padding: 2rem 3rem 1rem;
+  }
+  
+  .card-body {
+    padding: 0 3rem 2rem 3rem;
+    min-height: 100px;
+  }
+  
+  .card-footer {
+    display: flex;
+    align-items: stretch;
+    border-top: 1px solid #dbdbdb;
+    flex: 1;
+  }
+  
+  .card-footer .card-footer-item {
+    display: flex;
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 1rem;
+  }
+  
+  .card-footer-item:not(:first-child) {
+    border-left: 1px solid #dbdbdb;
+  }
+
+
+  
+  .site-cards {
+      
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: space-between; */
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .site-card {
+    background: #FAFAFA;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 0 1 calc(10% - 0.5rem);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    margin: 0.5rem;
+  }
+
+  .site-card .card-footer {
+      
+    font-size: 10px;
+  }
+
+  a.site-card  {
+    color: #202020;
+    text-decoration: none;
+  }
+
+  a.site-card:hover {
+      
+    background: rgb(243, 243, 243);
+  }
+  
+  .site-card .card-header {
+    padding: 1rem;
+  }
+
+
+.text-ellipsis {
+    width: 88px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    width: 50%;
+    margin: 5% auto;
+    left: 0;
+    right: 0;
+}
+
+.modal .card-footer {
+    margin: 0 1rem 0 1rem;
+}

@@ -1,0 +1,74 @@
+<html lang="en">
+
+<head>
+	<link rel="stylesheet" href="node_modules\wingcss\dist\wing.min.css" />
+	<link rel="stylesheet" href="style.css" />
+	<title>:) New Tab</title>
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<label>Hitno i bitno</label>
+				<textarea id="h-b" placeholder="Greetings..." style="resize: none" title="Radi danas"></textarea>
+			</div>
+			<div class="col">
+				<label>Nije hitno i bitno</label>
+				<textarea id="nh-b" placeholder="Greetings..." style="resize: none" title="Radi sljedeci tjedan"></textarea>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<label>Hitno i nije bitno</label>
+				<textarea id="h-nb" placeholder="Greetings..." style="resize: none" title="Delegiraj"></textarea>
+			</div>
+			<div class="col">
+				<label>Nije hitno ni bitno</label>
+				<textarea id="nh-nb" placeholder="Greetings..." style="resize: none" title="Ne radi"></textarea>
+			</div>
+		</div>
+
+		<div class="row">
+			<label>Top Sites</label>
+		</div>
+		<div id="top-sites" class="site-cards"></div>
+
+		<div class="row">
+			<label>Shortcuts</label>
+		</div>
+		<div id="shortcuts" class="site-cards">
+			<a class="site-card" href="#" title="Add new">
+				<div class="card-header center">
+					+
+				</div>
+				<div class="card-footer center text-center">
+					<span class="text-ellipsis">Add new</span>
+				</div>
+			</a>
+		</div>
+
+		<div class="card modal" style="display: none">
+			<div class="card-header">
+				Edit shortcut
+			</div>
+			<div class="card-body">
+				<label>Title</label>
+				<input type="text" placeholder="What is your name?" />
+				<label>URL</label>
+				<input type="text" placeholder="What is your name?" />
+
+			</div>
+			<div class="card-footer row">
+				<button class="outline">Remove</button>
+				<div>
+					<button class="outline">Cancel</button>
+					<button>Done</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="script.js"></script>
+
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "productinfinity",
+  "version": "1.0.0",
+  "description": "sophisticated planning tool as a chrome extension ",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wingcss": "^1.0.0-beta"
+  }
+}
