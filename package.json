@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "micromodal": "^0.4.0",
     "wingcss": "^1.0.0-beta"
   }
 }

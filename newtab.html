@@ -7,7 +7,7 @@
 </head>
 
 <body>
-	<div class="container">
+	<div id="main-container" class="container">
 		<div class="row">
 			<div class="col">
 				<label>Hitno i bitno</label>
@@ -38,7 +38,7 @@
 			<label>Shortcuts</label>
 		</div>
 		<div id="shortcuts" class="site-cards">
-			<a class="site-card" href="#" title="Add new">
+			<a id="add-site" class="site-card" href="#" title="Add new">
 				<div class="card-header center">
 					+
 				</div>
@@ -48,27 +48,33 @@
 			</a>
 		</div>
 
-		<div class="card modal" style="display: none">
+		<div class="row">
+			<label>Bookmarks bar</label>
+		</div>
+		<div id="bookmarks" class="site-cards"></div>
+
+		<div id="site-modal" class="card modal" aria-hidden="true">
 			<div class="card-header">
 				Edit shortcut
 			</div>
 			<div class="card-body">
 				<label>Title</label>
-				<input type="text" placeholder="What is your name?" />
+				<input id="input-title" type="text" placeholder="" />
 				<label>URL</label>
-				<input type="text" placeholder="What is your name?" />
+				<input id="input-url" type="text" placeholder="" />
 
 			</div>
 			<div class="card-footer row">
-				<button class="outline">Remove</button>
+				<button id="remove-site" class="outline">Remove</button>
 				<div>
-					<button class="outline">Cancel</button>
-					<button>Done</button>
+					<button class="outline" data-micromodal-close>Cancel</button>
+					<button id="done-site">Done</button>
 				</div>
 			</div>
 		</div>
 	</div>
 </body>
+<script src="node_modules\micromodal\dist\micromodal.min.js"></script>
 <script src="script.js"></script>
 
 </html>

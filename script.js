@@ -1,50 +1,87 @@
 chrome.topSites.get(items => {
     console.log(items);
+	const container = $('top-sites');
     items.forEach(item => {
-        addSiteCard(item);
+        addSiteCard(container, item);
     });
 })
 
-chrome.bookmarks.getTree(p => {
-    console.log(p);
-})
+chrome.bookmarks.getChildren("1", items => {
+	const container = $('bookmarks');
+	items.forEach(item => {
+		if(item.dateGroupModified) {
+			addGroup(item.id, item.title)
+		}
+        else {
+			addSiteCard(container, item);
+		}
+	})
+});
+
+function addGroup(id, title) {
+	const mainContainer = $('main-container');
+	const CONTAINER_ID = 'bookmarks-' + id;
+
+	const titleDiv = ce('div');
+	titleDiv.className = 'row';
+	titleDiv.innerHTML = `<label>Bookmarks bar > ${title}</label>`;
+
+	const container = ce('div');
+	container.id = CONTAINER_ID;
+	container.className = 'site-cards';
+
+	chrome.bookmarks.getChildren(id, items => {
+		items.forEach(item => {
+			addSiteCard(container, item);
+		});
+	});
+
+	mainContainer.append(titleDiv);
+	mainContainer.append(container);
+}
 
 
 function $(id) {
     return document.getElementById(id);
 }
 
+function $c(elem, query) {
+	return elem.querySelectorAll(query);
+}
+
 function ce(tagName) {
     return document.createElement(tagName);
 }
 
-function addLink(item) {
-    const topSitesContainer = $('top-sites');
-
-    const div = ce('div');
-    div.innerHTML = `<a href="${item.url}"><img src="chrome://favicon/size/24@1x/${item.url}" alt=""/>${item.title}</a>`;
-    topSitesContainer.append(div);
-}
 
 /**
  * Item is {title, url}
  * @param {*} item 
  */
-function addSiteCard(item) {
-    const topSitesContainer = $('top-sites');
+function addSiteCard(container, item, callback) {
 
-    const a = ce('a');
-    a.href = item.url;
-    a.title = item.title;
-    a.className = "site-card";
-    a.innerHTML = `<div class="card-header center">
-        <img src="chrome://favicon/size/24@1x/${item.url}" alt="" />
-    </div>
-    <div class="card-footer center text-center">
-        <span class="text-ellipsis">${item.title}</span> 
-    </div>`;
+    const a = ce('div');
+    a.className = "site-card-wrapper";
+	a.innerHTML = `
+	<a href="${item.url}" title="${item.title}" class="site-card">
+		<div class="card-header center">
+			<img src="chrome://favicon/size/24@1x/${item.url}" alt="" />
+		</div>
+		<div class="card-footer center text-center">
+			<span class="text-ellipsis">${item.title}</span> 
+		</div>
+	</a>`
 
-    topSitesContainer.append(a);
+	if(callback) {
+		const button = ce('div');
+		button.className = 'card-options';
+		button.innerHTML = '&middot;&middot;&middot;'
+		button.onclick = callback;
+		a.append(button);
+	}
+
+	container.append(a);
+	return a;
 }
 
 ['h-b', 'nh-b', 'h-nb', 'nh-nb'].forEach(id => {
@@ -56,29 +93,89 @@ function bindToStorage(elem, key) {
         elem.value = data[key];
     });
 
-    function func(e) {
+    function updateStorage(e) {
         const data = {};
         data[key] = this.value;
         chrome.storage.local.set(data);
     }
 
-    elem.oninput = func;
+    elem.oninput = updateStorage;
+}
+
+const shortcutsMenu = new Shortcuts();
+const modal = new Modal();
+
+function Modal() {
+	MicroModal.init();
+	const inputTitle = $('input-title');
+	const inputUrl = $('input-url');
+	const MODAL_ID = 'site-modal';
+
+	$('add-site').onclick = () => {
+		this.setData('', '');
+		MicroModal.show(MODAL_ID);
+	}
+
+	$('remove-site').onclick = () => {
+		const item = this.getData();
+		shortcutsMenu.removeShortcut(item);
+		MicroModal.close(MODAL_ID);
+	}
+
+	$('done-site').onclick = () => {
+		const item = this.getData();
+		shortcutsMenu.addShortcut(item);
+		MicroModal.close(MODAL_ID);
+	}
+
+	this.open = function(item) {
+		this.setData(item.title, item.url);
+		MicroModal.show(MODAL_ID);
+	}
+
+	this.setData = function(title, url) {
+		inputTitle.value = title;
+		inputUrl.value = url;
+	}
+
+	this.getData = function() {
+		return {
+			title: inputTitle.value,
+			url: inputUrl.value
+		}
+	}
 }
 
 
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+function Shortcuts() {
+	this.shortcuts = [];
+	const container = $('shortcuts');
 
-//   function thumbnailsGotten(data) {
-//     var eightBallWindow = $('mostVisitedThumb');
-//     var rand = Math.floor(Math.random() * data.length);
-//     eightBallWindow.href = data[rand].url;
-//     eightBallWindow.textContent = data[rand].title;
-//     eightBallWindow.style.backgroundImage = 'url(chrome://favicon/' +
-//         data[rand].url + ')';
-//   }
-  
-//   window.onload = function() {
-//     chrome.topSites.get(thumbnailsGotten);
-//   }
+	function addElement(item) {
+		addSiteCard(container, item, e => {
+			e.stopPropagation();
+			modal.open(item);
+		});
+	}
+
+	chrome.storage.local.get(['shortcuts'], (data) => {
+		this.shortcuts = data['shortcuts'] || [];
+		this.shortcuts.forEach(addElement);
+	});
+
+	this.addShortcut = function(item) {
+		addElement(item);
+		this.shortcuts.push(item);
+		chrome.storage.local.set({shortcuts: this.shortcuts});
+	}
+
+	this.removeShortcut = function(item) {
+		const index = this.shortcuts.findIndex(s => s.url === item.url);
+		if(index !== -1){
+			this.shortcuts.splice(index, 1);
+			chrome.storage.local.set({shortcuts: this.shortcuts});
+			const elems = $c(container, '.site-card-wrapper');
+			elems[index].remove();
+		}
+	}
+}
